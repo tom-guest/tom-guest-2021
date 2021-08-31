@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.1.0">
+  <meta name="generator" content="Hugo 0.55.6" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tom Guest">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction In this tutorial you will learn how to install and use bioconductor.
+Bioconductor is an opensource collection of R packages that provides a framework for doing bioinformatics in R.
+Install bioconductor with this:
+if (!requireNamespace(&quot;BiocManager&quot;)) install.packages(&quot;BiocManager&quot;) BiocManager::install()  Afterwards, installing bioconductor (BioC) packages is a little different from other R packages and makes use of the BiocManager::install() function. For example, to install QuasR:
+BiocManager::install(&quot;QuasR&quot;, version = &quot;3.8&quot;)  Bioconductor releases contain a number of R packages that have been designed to perform different tasks or provide the data structures required for interacting with genomic data.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://tomguest.netlify.com/tutorial/bioconductor_intro/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#f2671d">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans|Pontano+Sans|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="https://tomguest.netlify.com/index.xml" type="application/rss+xml" title="Tom Guest ">
+  <link rel="feed" href="https://tomguest.netlify.com/index.xml" type="application/rss+xml" title="Tom Guest ">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://tomguest.netlify.com/tutorial/bioconductor_intro/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@tom_guest">
+  <meta property="twitter:creator" content="@tom_guest">
+  
+  <meta property="og:site_name" content="Tom Guest ">
+  <meta property="og:url" content="https://tomguest.netlify.com/tutorial/bioconductor_intro/">
+  <meta property="og:title" content="Getting started with Bioconductor | Tom Guest ">
+  <meta property="og:description" content="Introduction In this tutorial you will learn how to install and use bioconductor.
+Bioconductor is an opensource collection of R packages that provides a framework for doing bioinformatics in R.
+Install bioconductor with this:
+if (!requireNamespace(&quot;BiocManager&quot;)) install.packages(&quot;BiocManager&quot;) BiocManager::install()  Afterwards, installing bioconductor (BioC) packages is a little different from other R packages and makes use of the BiocManager::install() function. For example, to install QuasR:
+BiocManager::install(&quot;QuasR&quot;, version = &quot;3.8&quot;)  Bioconductor releases contain a number of R packages that have been designed to perform different tasks or provide the data structures required for interacting with genomic data."><meta property="og:image" content="https://tomguest.netlify.com/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-04-21T00:00:00&#43;01:00">
+  
+  <meta property="article:modified_time" content="2019-04-21T00:00:00&#43;01:00">
+  
+
+  
+
+  
+
+  <title>Getting started with Bioconductor | Tom Guest </title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Tom Guest </a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#projects">
+            
+            <span>Learning R</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" id="search-query" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/tutorial/">ChIP-seq with R</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/tutorial/">Overview</a>
+      </li>
+      
+      <li class="active">
+        <a href="/tutorial/bioconductor_intro/">Introduction to Bioconductor</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/bsgenome/">Forging a BSgenome package</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/alignment/">Aligning to a reference genome</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/normalisation/">Normalising read counts</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/peakcalling/">Peak calling</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/motif/">De-novo motif finding</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      
+      <p class="docs-toc-title">On this page</p>
+      
+
+      <nav id="TableOfContents">
+<ul>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#some-examples-of-bioc-packages">Some examples of BioC packages</a></li>
+</ul></li>
+<li><a href="#creating-and-using-granges-objects">Creating and using GRanges objects</a>
+<ul>
+<li><a href="#creating-simple-granges">Creating simple GRanges</a></li>
+<li><a href="#granges-from-dataframes">GRanges from dataframes</a></li>
+</ul></li>
+</ul>
+</nav>
+
+      <ul class="nav toc-top">
+        <li><a href="#">Back to top</a></li>
+      </ul>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article" itemscope itemtype="http://schema.org/Article">
+
+        <div class="docs-article-container">
+          <h1 itemprop="name">Getting started with Bioconductor</h1>
+
+          <div class="article-style" itemprop="articleBody">
+            
+
+<h1 id="introduction">Introduction</h1>
+
+<p>In this tutorial you will learn how to install and use bioconductor.</p>
+
+<p><a href="https://www.bioconductor.org" target="_blank">Bioconductor</a> is an opensource collection of R packages that provides a framework for doing bioinformatics in R.</p>
+
+<p>Install bioconductor with this:</p>
+
+<pre><code class="language-r">if (!requireNamespace(&quot;BiocManager&quot;))
+    install.packages(&quot;BiocManager&quot;)
+BiocManager::install()
+</code></pre>
+
+<p>Afterwards, installing bioconductor (BioC) packages is a little different from other R packages and makes use of the BiocManager::install() function. For example, to install QuasR:</p>
+
+<pre><code class="language-r">BiocManager::install(&quot;QuasR&quot;, version = &quot;3.8&quot;)
+</code></pre>
+
+<p>Bioconductor releases contain a number of R packages that have been designed to perform different tasks or provide the data structures required for interacting with genomic data.</p>
+
+<h2 id="some-examples-of-bioc-packages">Some examples of BioC packages</h2>
+
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Example packages</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Data structures</td>
+<td><strong>IRanges, GenomicRanges, Biostrings, BSgenome</strong></td>
+</tr>
+
+<tr>
+<td>Input of data</td>
+<td><strong>ShortRead</strong>, Rsamtools, GenomicAlignments, <strong>rtracklayer</strong></td>
+</tr>
+
+<tr>
+<td>Annotation</td>
+<td>GenomicFeatures, <strong>BSgenome, TxDb</strong></td>
+</tr>
+
+<tr>
+<td>Alignment</td>
+<td><strong>Rbowtie, QuasR</strong>, Biostrings</td>
+</tr>
+
+<tr>
+<td>ChIP-seq</td>
+<td><strong>ChIPseeker</strong>, chipseq, ChIPseqR, <strong>ChIPpeakAnno</strong>, DiffBind, BayesPeak</td>
+</tr>
+
+<tr>
+<td>De-novo motif discovery</td>
+<td>rGADEM, MotifDb, SeqLogo, <strong>ChIPpeakAnno</strong></td>
+</tr>
+
+<tr>
+<td>RNA-seq</td>
+<td>EdgeR</td>
+</tr>
+</tbody>
+</table>
+
+<p>Packages in <strong>bold</strong> are ones that are used later.</p>
+
+<h1 id="creating-and-using-granges-objects">Creating and using GRanges objects</h1>
+
+<p>One of the most useful data structures is GRanges. These are essentially a list of genomic intervals that could be anything from genes to transcription factor binding sites.</p>
+
+<h2 id="creating-simple-granges">Creating simple GRanges</h2>
+
+<pre><code class="language-r">library(GenomicRanges)
+</code></pre>
+
+<pre><code>## Loading required package: stats4
+</code></pre>
+
+<pre><code>## Loading required package: BiocGenerics
+</code></pre>
+
+<pre><code>## Loading required package: parallel
+</code></pre>
+
+<pre><code>## 
+## Attaching package: 'BiocGenerics'
+</code></pre>
+
+<pre><code>## The following objects are masked from 'package:parallel':
+## 
+##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+##     clusterExport, clusterMap, parApply, parCapply, parLapply,
+##     parLapplyLB, parRapply, parSapply, parSapplyLB
+</code></pre>
+
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     IQR, mad, sd, var, xtabs
+</code></pre>
+
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     anyDuplicated, append, as.data.frame, basename, cbind, colMeans,
+##     colnames, colSums, dirname, do.call, duplicated, eval, evalq,
+##     Filter, Find, get, grep, grepl, intersect, is.unsorted, lapply,
+##     lengths, Map, mapply, match, mget, order, paste, pmax, pmax.int,
+##     pmin, pmin.int, Position, rank, rbind, Reduce, rowMeans, rownames,
+##     rowSums, sapply, setdiff, sort, table, tapply, union, unique,
+##     unsplit, which, which.max, which.min
+</code></pre>
+
+<pre><code>## Loading required package: S4Vectors
+</code></pre>
+
+<pre><code>## 
+## Attaching package: 'S4Vectors'
+</code></pre>
+
+<pre><code>## The following object is masked from 'package:base':
+## 
+##     expand.grid
+</code></pre>
+
+<pre><code>## Loading required package: IRanges
+</code></pre>
+
+<pre><code>## Loading required package: GenomeInfoDb
+</code></pre>
+
+<p>To start, here is a GRanges object which has 3 genes, all on chromosome 1. The first gene runs from position 1-3, and are 3 nucleotides long.</p>
+
+<pre><code class="language-r">gr1 &lt;- GRanges(seqnames = &quot;chr1&quot;, strand = c(&quot;+&quot;, &quot;-&quot;, &quot;+&quot;),
+              ranges = IRanges(start = c(1,3,5), width = 3))
+gr1
+</code></pre>
+
+<pre><code>## GRanges object with 3 ranges and 0 metadata columns:
+##       seqnames    ranges strand
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt;
+##   [1]     chr1       1-3      +
+##   [2]     chr1       3-5      -
+##   [3]     chr1       5-7      +
+##   -------
+##   seqinfo: 1 sequence from an unspecified genome; no seqlengths
+</code></pre>
+
+<p>To create a GRange for a single chromosome.</p>
+
+<pre><code class="language-r">chrI &lt;- GRanges(seqnames = &quot;chrI&quot;,
+              ranges = IRanges(start = 1, width = 3000000))
+chrI
+</code></pre>
+
+<pre><code>## GRanges object with 1 range and 0 metadata columns:
+##       seqnames    ranges strand
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt;
+##   [1]     chrI 1-3000000      *
+##   -------
+##   seqinfo: 1 sequence from an unspecified genome; no seqlengths
+</code></pre>
+
+<p>To create a GRange with ChIP-seq peaks, all on the same chromosome you could assign the start and end co-ordinates to vectors and create a GRange from that.</p>
+
+<pre><code class="language-r">peak_start &lt;- c(100,220,450,767,899,1040)
+peak_end &lt;- c(140,260,490,800,945,1100)
+peaks_gr &lt;- GRanges(seqnames = &quot;chrI&quot;,
+                    ranges = IRanges(start=peak_start, end=peak_end))
+peaks_gr
+</code></pre>
+
+<pre><code>## GRanges object with 6 ranges and 0 metadata columns:
+##       seqnames    ranges strand
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt;
+##   [1]     chrI   100-140      *
+##   [2]     chrI   220-260      *
+##   [3]     chrI   450-490      *
+##   [4]     chrI   767-800      *
+##   [5]     chrI   899-945      *
+##   [6]     chrI 1040-1100      *
+##   -------
+##   seqinfo: 1 sequence from an unspecified genome; no seqlengths
+</code></pre>
+
+<h2 id="granges-from-dataframes">GRanges from dataframes</h2>
+
+<p>It is more likely that you will want to create GRanges objects from other data structures. For example, if you import peaks from a BED file. Bioconductor packages provide import functions for different filetypes and then this can be coerced into a dataframe and easily converted into a GRanges object with the <code>makeGRangesFromDataFrame</code> function.</p>
+
+          </div>
+
+          
+
+        </div>
+
+        <div class="body-footer">
+          Last updated on Apr 21, 2019
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.d7381f2d79e6271d4da28f474f49096c.js"></script>
+
+  </body>
+</html>
+
+

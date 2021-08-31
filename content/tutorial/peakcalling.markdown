@@ -1,0 +1,146 @@
++++
+title = "Peak calling"
+
+date = 2019-07-04T00:00:00
+# lastmod = 2019-04-19T00:00:00
+
+draft = false  # Is this a draft? true/false
+toc = true  # Show table of contents? true/false
+type = "docs"  # Do not modify.
+
+# Add menu entry to sidebar.
+linktitle = "Peak calling"
+[menu.tutorial]
+  parent = "ChIP-seq with R"
+  weight = 6
++++
+
+## Introduction
+
+In this tutorial we will use MACS to call peaks.
+
+## How-to install MACS
+
+MACS2 runs in python (v2.7, not 3). You will need to download and install python and numpy. 
+
+- Download [Python 2.7](https://www.python.org)  
+
+- Then download the `numpy.whl` file [numpy](https://pypi.org/project/numpy/)  
+
+Using the Terminal, navigate to the folder containing the `numpy.whl` file and then install numpy by entering:  
+
+`pip install numpy.whl`
+
+- Download the tarfile for [MACS](https://pypi.org/project/MACS2), extract it (by double-clicking on Mac)
+
+- Navigate to the folder containing the extracted MACS files in Terminal and run:  
+
+`python setup.py install`
+
+## MACS2 parameters
+
+`-t`: treatment file  
+`-c`: control file  
+`--format`: the input file format, e.g.. BAM   
+`--gsize`: the size of the genome (or chromosome)  
+`--name`: a name to append to the output files  
+`--bw`: 'bandwidth' the average size of the DNA fragments (after sonication)
+
+You can find out more information about MACS2 parameters on the [Github page](https://github.com/taoliu/MACS), or by typing `macs2` into the Terminal command line.
+
+## Using MACS2 to call peaks
+
+To run MACS you will need to navigate to the folder containing your BAM alignment files. Using the `cd` command to change directory.  
+
+From here you need to call `macs2 callpeak` with the parameters you wish to use. If you have multiple replicates you can either call peaks with them both at the same time or separately. Peak calling works with and without a control sample.
+
+`macs2 callpeak -t treatment_rep1.bam treatment_rep2.bam -c control_rep1.bam control_rep2.bam --format BAM  --gsize <genome_size> --name "rep1andrep2"  --bw 400 --nomodel`
+
+In this example macs 2 call peak function is called on two replicate treatment files BAM files, with 2 control files. The format is specified as `BAM`, replace `<genome_size>` with the size of the genome/chromosome, for example: `2961149` for chromosome I of _V.cholerae_. The bandwidth is set to 400 and have told macs not to use its model function.  
+
+The function prints to the console as it is working and when it is complete you will see `Done!`. It produces an excel sheet (which is actually a `.csv` file), some `.BED` files, `.narrowPEAK` (which is tab-delimited list of peaks) and some logs.  
+
+They all contain the same information, but the excel sheet is probably the most user-friendly. BED files can be opened in some genome browsers.
+
+I recommend moving the MACS output into a macs folder within your project structure, rather than keeping the output files with your alignments.
+
+## Using peak information into R
+
+### Why import peaks?
+
+You can easily import all the information in the excel sheet into R. This can then be used for visualisation, finding the nearest genes, calculating the distance from peak centres to the nearest transcription start site etc..  
+You can use R to calculate the centre of the peak (based on the start and end, recognised by MACS) or if you wish to use a genome browser to manually select peak centres you could do this by amending the data in Excel.  
+
+This can then be used to extract the DNA sequence upstream/downstream of the peak centres in `.fasta` format to perform de-novo motif finding with MEME.
+
+### Reading peak data into R
+
+Since the `.xls` file is actually a `.csv` file in disguise it can be easily imported into R. The file also contains ~20 lines of information before the peak data, these lines start with a # so we can tell R to ignore those lines.
+
+
+```r
+peaks_dataFrame <- read.delim("/macs/rep1andrep2.xls",
+  comment.char = "#")
+```
+
+### Finding genes adjacent to peaks
+
+To find the genes that are adjacent to the peaks we will use the `ChIPseeker` [package](https://www.bioconductor.org/packages/release/bioc/html/ChIPseeker.html).
+
+#### Install ChIPseeker
+ 
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ChIPseeker", version = "3.8")
+```
+
+#### Create a TxDB object
+
+A TxDB object contains genome annotation information that you will need to annotate peaks with genomic information. It is very simple to make, once you have done you can save and reload it whenever you wish to use it.
+
+- Download a GFF or GTF annotation file (from NCBI) and keep it in your `genomes` folder.    
+
+
+```r
+library(GenomicFeatures)
+library(AnnotationDbi)
+<genomeName>TxDB <- makeTxDbFromGFF("genomes/annotation<genomeName>.gff")
+saveDb(<genomeName>TxDB, file="genomes/<genomeName>TxDB.satellite")
+```
+
+- Loading the TxDB file (replacing <genome>, with a name for the genome you are using):
+
+
+```r
+<genome>Annotation <- loadDb("genomes/<genomeName>TxDB.sqlite")
+```
+
+#### Annotate peaks
+
+You will need to convert your data frame containing the peak data into a GRange object, this can easily be done with the `makeGRangesFromDataFrame()` function from the GenomicRanges package.  
+
+
+```r
+peaks_gr <- makeGRangesFromDataFrame(peaks_dataFrame, keep.extra.columns=TRUE)
+```
+
+By default the function removes any extra columns and only keeps chr, start and end. Setting the parameter `keep.extra.columns` to TRUE will prevent this.  
+
+Then you can use the `annotatePeak()` function. You will need to direct it to your GRange and to a TxDb object that contains the genome annotation for the species you are working with.
+
+
+```r
+library(ChIPseeker)
+annotatedPeaks <- annotatePeak(peaks_gr, TxDb = <genome>Annotation)
+```
+
+Making a data frame with your annotated data makes it more useful, and you can export it as `.csv` file to save and open later in R, Excel or in other software.
+
+
+```r
+annotatedPeaksDF <- as.data.frame(annotatedPeaks)
+write.csv(annotatedPeaksDF, file = "annotation/rep1andrep2.csv")
+```
+

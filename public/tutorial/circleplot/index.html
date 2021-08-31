@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.1.0">
+  <meta name="generator" content="Hugo 0.55.6" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tom Guest">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction In this tutorial we will use the ggbio package to build overview plots.
+These are good for showing a simple representation of ChIP-seq and other datasets.
+In the example above only two tracks are shown, which are a representation of the all the genes encoded on the chromosome. Inner tracks can then be added to represent over types of data that have been aligned to the genome, such as sequencing reads.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://tomguest.netlify.com/tutorial/circleplot/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#f2671d">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans|Pontano+Sans|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="https://tomguest.netlify.com/index.xml" type="application/rss+xml" title="Tom Guest ">
+  <link rel="feed" href="https://tomguest.netlify.com/index.xml" type="application/rss+xml" title="Tom Guest ">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://tomguest.netlify.com/tutorial/circleplot/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@tom_guest">
+  <meta property="twitter:creator" content="@tom_guest">
+  
+  <meta property="og:site_name" content="Tom Guest ">
+  <meta property="og:url" content="https://tomguest.netlify.com/tutorial/circleplot/">
+  <meta property="og:title" content="Chromosome overview plots | Tom Guest ">
+  <meta property="og:description" content="Introduction In this tutorial we will use the ggbio package to build overview plots.
+These are good for showing a simple representation of ChIP-seq and other datasets.
+In the example above only two tracks are shown, which are a representation of the all the genes encoded on the chromosome. Inner tracks can then be added to represent over types of data that have been aligned to the genome, such as sequencing reads."><meta property="og:image" content="https://tomguest.netlify.com/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2020-01-27T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2020-01-27T00:00:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>Chromosome overview plots | Tom Guest </title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Tom Guest </a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#projects">
+            
+            <span>Learning R</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" id="search-query" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/tutorial/">ChIP-seq with R</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/tutorial/">Overview</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/bioconductor_intro/">Introduction to Bioconductor</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/bsgenome/">Forging a BSgenome package</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/alignment/">Aligning to a reference genome</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/normalisation/">Normalising read counts</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/peakcalling/">Peak calling</a>
+      </li>
+      
+      <li >
+        <a href="/tutorial/motif/">De-novo motif finding</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      
+      <p class="docs-toc-title">On this page</p>
+      
+
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#required-packages-and-data">Required packages and data</a>
+<ul>
+<li><a href="#create-a-txdb-object">Create a TxDB object</a></li>
+</ul></li>
+<li><a href="#creating-a-gene-track">Creating a gene track</a></li>
+<li><a href="#creating-the-plot">Creating the plot</a></li>
+</ul></li>
+</ul>
+</nav>
+
+      <ul class="nav toc-top">
+        <li><a href="#">Back to top</a></li>
+      </ul>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article" itemscope itemtype="http://schema.org/Article">
+
+        <div class="docs-article-container">
+          <h1 itemprop="name">Chromosome overview plots</h1>
+
+          <div class="article-style" itemprop="articleBody">
+            
+
+<h2 id="introduction">Introduction</h2>
+
+<p>In this tutorial we will use the <a href="https://bioconductor.org/packages/release/bioc/html/ggbio.html" target="_blank">ggbio</a> package to build overview plots.</p>
+
+<p>These are good for showing a simple representation of ChIP-seq and other datasets.</p>
+
+<p><img src="/tutorial/circle_files/example.png" alt="Example of a simple overview plot. In this plot genes of the positive (red) and negative (blue) strands of a single bacterial chromosome are shown as rectangles on two tracks." /></p>
+
+<p>In the example above only two tracks are shown, which are a representation of the all the genes encoded on the chromosome. Inner tracks can then be added to represent over types of data that have been aligned to the genome, such as sequencing reads.</p>
+
+<h2 id="required-packages-and-data">Required packages and data</h2>
+
+<p>Install (if necessary) and then load the following packages:</p>
+
+<ul>
+<li>tidyverse<br /></li>
+<li>data.table<br />
+<br /></li>
+</ul>
+
+<p>These packages are bioconductor packages:</p>
+
+<ul>
+<li>ggbio<br /></li>
+<li>AnnotationDbi<br /></li>
+<li>GenomicRanges<br /></li>
+<li>Biostrings<br /></li>
+<li>GenomicFeatures<br /></li>
+</ul>
+
+<p>You will also need to import annotation data for the chromosome(s) as a TxDB. You can use GFF to make a TxDB or download a TxDB that already exists for the organism.</p>
+
+<h3 id="create-a-txdb-object">Create a TxDB object</h3>
+
+<p>A TxDB object contains genome annotation information. It is very simple to make, once you have done you can save and reload it whenever you wish to use it.</p>
+
+<ul>
+<li>Download a GFF or GTF annotation file (from NCBI)</li>
+</ul>
+
+<pre><code class="language-r">library(GenomicFeatures)
+library(AnnotationDbi)
+&lt;genomeName&gt;TxDB &lt;- makeTxDbFromGFF(&quot;annotation&lt;genomeName&gt;.gff&quot;)
+saveDb(&lt;genomeName&gt;TxDB, file=&quot;&lt;genomeName&gt;TxDB.sqlite&quot;)
+</code></pre>
+
+<ul>
+<li>Loading the TxDB file (replacing <genome>, with a name for the genome you are using):</li>
+</ul>
+
+<pre><code class="language-r">&lt;genome&gt;Annotation &lt;- loadDb(&quot;&lt;genomeName&gt;TxDB.sqlite&quot;)
+</code></pre>
+
+<h2 id="creating-a-gene-track">Creating a gene track</h2>
+
+<p>This track shows the genes on the positive and negative strand of the chromosome. To do this in a single track you need to collapse it, because there are often overlapping genes in different reading frames.</p>
+
+<pre><code class="language-r">p_strand &lt;- as_tibble(cds(&lt;genome&gt;Annotation, filter = list(tx_strand = &quot;+&quot;))) %&gt;%
+  dplyr::select(c('seqnames', 'start', 'end')) %&gt;%
+  arrange(start) %&gt;%
+  dplyr::group_by(g = cumsum(cummax(lag(end, default = first(end))) &lt; start)) %&gt;% 
+  dplyr::summarise(start = first(start), end = max(end)) %&gt;%
+  dplyr::select(c('start', 'end'))
+
+p_strand$seqnames &lt;- &quot;NC_000000.0&quot;
+
+n_strand &lt;- as_tibble(cds(chrIAnnotation, filter = list(tx_strand = &quot;-&quot;))) %&gt;%
+  dplyr::select(c('seqnames', 'start', 'end')) %&gt;%
+  dplyr::arrange(start) %&gt;%
+  dplyr::group_by(g = cumsum(cummax(lag(end, default = first(end))) &lt; start)) %&gt;% 
+  dplyr::summarise(start = first(start), end = max(end)) %&gt;%
+  dplyr::select(c('start', 'end'))
+
+n_strand$seqnames &lt;- &quot;NC_000000.0&quot;
+</code></pre>
+
+<p>First, import the coding sequences from the annotation file and filter for the positive strand only.</p>
+
+<p>Then arrange data frame by the start position of each gene.</p>
+
+<p>The group_by and summarise functions are used to &lsquo;collapse&rsquo; the data, by using the start and end positions of genes to merge overlapping coding regions in the different reading frames.</p>
+
+<p><code>lag(end)</code> adds a column that tracks the previous end values, <code>cummax</code> stores the highest of previous end values which is then compared with the end. When a start value is higher than the maximum of the previous stop, it creates a new group. <code>cumsum</code> tracks the number of TRUEs and gives each different group (i.e.. overlapping genes form groups) a unique number. <code>summarise</code> aggregates based on the group id using the first start value of each group and the largest end value.</p>
+
+<p>Finally need to add back in the <code>seqname</code> column. This should be the RefSeq value from NCBI and should match up the chromosome name used in the reference genome. This is repeated for the negative strand.</p>
+
+<p>Next you create GRanges objects with the <code>p_strand</code> and <code>n_strand</code> information using the <code>makeGRangesFromDataFrame</code> function from the <code>GenomicRanges</code> package.</p>
+
+<pre><code class="language-r">pos_genes &lt;- makeGRangesFromDataFrame(p_strand)
+neg_genes &lt;- makeGRangesFromDataFrame(n_strand)
+</code></pre>
+
+<h2 id="creating-the-plot">Creating the plot</h2>
+
+<p>The plot is created using the <a href="https://bioconductor.org/packages/release/bioc/html/ggbio.html" target="_blank">ggbio</a> package. It works similarly to ggplot, so you can add multiple elements by using &lsquo;+&rsquo; and various geoms (such as point, line, link, etc..) For the gene track we will use the rectangle (<code>rect</code>) geom.</p>
+
+<pre><code class="language-r">plot &lt;- ggbio(buffer = 0.2, radius = 10) +
+  #circle(avg_reads_track, geom = &quot;line&quot;, trackWidth= 3,
+  #      color = &quot;dodgerblue2&quot;, aes(y=average), buffer=35, radius=6, space.skip=0) +
+  circle(neg_genes, geom = &quot;rect&quot;, color=NA, 
+        fill='blue', trackWidth=0.5, space.skip=0) +
+  circle(pos_genes, geom = &quot;rect&quot;, color=NA, 
+         fill='red', trackWidth=0.5, space.skip=0) 
+plot
+</code></pre>
+
+<p>The plot is initialised using a call to the <code>ggbio</code> function. The two parameters:</p>
+
+<ul>
+<li>buffer: the space between each track<br /></li>
+<li>radius: the size of the circle plot (might need to increase this depending on the number of tracks you want to add)<br /></li>
+</ul>
+
+<p>The <code>circle()</code> function is called for creating a track in the plot, there a number of parameters that can be set to alter the aesthetics of the track. You can view the help file and all the parameters that can be altered by entering <code>?circle</code> in the R console.</p>
+
+<p><img src="/tutorial/circle_files/circle_help.png" alt="Help page for the ggbio circle layout function." /></p>
+
+<p>The <code>space.skip</code> parameter set to zero means that there is no space between the beginning and end of the chromosome. This is required because the default behaviour is designed to have space between multiple chromosomes.</p>
+
+          </div>
+
+          
+
+        </div>
+
+        <div class="body-footer">
+          Last updated on Jan 27, 2020
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.d7381f2d79e6271d4da28f474f49096c.js"></script>
+
+  </body>
+</html>
+
+
