@@ -3,50 +3,36 @@ bio: My research interests include distributed robotics, mobile computing and pr
   matter.
 education:
   courses:
-  - course: PhD in Artificial Intelligence
-    institution: Stanford University
-    year: 2012
-  - course: MEng in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2009
-  - course: BSc in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2008
-email: ""
+  - course: PhD Molecular Microbiology
+    institution: University of Birmingham, Birmingham, UK
+    year: 2021
+  - course: BSc Biological Sciences
+    institution: Heriot-Watt University, Edinburgh, UK
+    year: 2016
 highlight_name: false
 interests:
-- Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
+- Gene transcription
+- Pathogenecity
+- R and data visualisation
 organizations:
-- name: Stanford University
-  url: https://www.stanford.edu/
-role: Professor of Artificial Intelligence
+- name: Umeå University
+role: Postdoctoral researcher
 social:
-- icon: envelope
-  icon_pack: fas
-  link: /#contact
 - display:
     header: true
   icon: twitter
   icon_pack: fab
   label: Follow me on Twitter
-  link: https://twitter.com/GeorgeCushen
+  link: https://twitter.com/tom_guest
 - icon: graduation-cap
   icon_pack: fas
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
-- icon: github
-  icon_pack: fab
-  link: https://github.com/gcushen
-- icon: linkedin
-  icon_pack: fab
-  link: https://www.linkedin.com/
+  link: https://scholar.google.co.uk/citations?user=Q_M8f28AAAAJ&hl
 superuser: true
-title: Nelson Bighetti
+title: Tom Guest
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+I am currently a postdoctoral researcher in [Felipe Cava's lab](https://www.thecavalab.com) at the Department of Molecular Biology, Umeå University, Sweden. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
+I did my PhD at the University of Birmingham in the [Grainger Lab](https://www.graingerlab.com) studying gene transcription in the bacterial pathogen _Vibrio cholerae_.
 
-{{< icon name="download" pack="fas" >}} Download my {{< staticref "uploads/demo_resume.pdf" "newtab" >}}resumé{{< /staticref >}}.
+I graduated from Heriot-Watt University, Edinburgh in 2016 with a BSc in Biological Sciences.
