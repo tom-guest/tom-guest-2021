@@ -35,17 +35,23 @@
     <loc>https://tomguest.netlify.com/publication/</loc>
     <lastmod>2021-12-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://tomguest.netlify.com/tag/source-themes/</loc>
-    <lastmod>2021-12-15T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://tomguest.netlify.com/author/t-guest/</loc>
-    <lastmod>2021-12-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tomguest.netlify.com/tags/</loc>
     <lastmod>2021-12-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tomguest.netlify.com/</loc>
     <lastmod>2021-12-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tomguest.netlify.com/author/d-forrest/</loc>
+    <lastmod>2021-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tomguest.netlify.com/author/e-warman/</loc>
+    <lastmod>2021-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tomguest.netlify.com/author/j-wade/</loc>
+    <lastmod>2021-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tomguest.netlify.com/publication/bidirectional-article/</loc>
+    <lastmod>2021-05-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tomguest.netlify.com/tutorial/</loc>
     <lastmod>2021-01-24T00:00:00+00:00</lastmod>
@@ -90,6 +96,9 @@
     <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tomguest.netlify.com/project/</loc>
+    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tomguest.netlify.com/tags/</loc>
     <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tomguest.netlify.com/admin/</loc>
