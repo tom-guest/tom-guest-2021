@@ -3,7 +3,7 @@ abstract: Transcription initiates at promoters, DNA regions recognized by a DNA-
 authors:
 - E Warman
 - D Forrest
-- "__T Guest__"
+- T Guest
 - JRJ Haycocks
 - J Wade
 - DC Grainger
