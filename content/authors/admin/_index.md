@@ -11,7 +11,7 @@ education:
 highlight_name: false
 interests:
 - Gene transcription
-- Pathogenecity
+- Pathogenicity
 - R and data visualisation
 organizations:
 - name: Umeå University
