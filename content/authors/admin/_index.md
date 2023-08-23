@@ -14,7 +14,7 @@ interests:
 - Pathogenicity
 - R and data visualisation
 organizations:
-- name: Umeå University
+- name: HIRI, Würzburg
 role: Postdoctoral researcher
 social:
 - display:
