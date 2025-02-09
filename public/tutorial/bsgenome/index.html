@@ -1,0 +1,1088 @@
+<!DOCTYPE html><html lang="en-us" >
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  
+  
+    <meta name="generator" content="Wowchemy 5.3.0 for Hugo" />
+  
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tom Guest" />
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction In this tutorial we will use the BSgenome package to create an R package that contains the genome for Vibrio cholerae, but you can replace it with your favourite organism." />
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://tomguest.netlify.com/tutorial/bsgenome/" />
+
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+
+  
+  
+  
+    <meta name="theme-color" content="#1565c0" />
+  
+
+  
+  
+
+  
+
+  <link rel="stylesheet" href="/css/vendor-bundle.min.f1ecf783c14edc00c9320c205831ad8e.css" media="print" onload="this.media='all'">
+
+  
+  
+  
+    
+    
+
+    
+    
+    
+    
+      
+      
+    
+    
+    
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" integrity="sha512-1xoFisiGdy9nvho8EgXuXvnpR5GAMSjFwp40gSRE3NwdUdIMIKuPa7bqoUhLD0O/5tPNhteAsE5XyyMi5reQVA==" crossorigin="anonymous" media="print" onload="this.media='all'">
+    
+
+    
+
+    
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.481af39c39ffd87b2d14f39943e7c723.css" />
+
+  
+
+
+
+  
+
+  
+
+  
+
+
+
+
+  
+  
+  
+
+  
+
+  
+    <link rel="manifest" href="/manifest.webmanifest" />
+  
+
+  <link rel="icon" type="image/png" href="/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_3.png" />
+  <link rel="apple-touch-icon" type="image/png" href="/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_180x180_fill_lanczos_center_3.png" />
+
+  <link rel="canonical" href="https://tomguest.netlify.com/tutorial/bsgenome/" />
+
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary" />
+  
+  <meta property="og:site_name" content="Tom Guest" />
+  <meta property="og:url" content="https://tomguest.netlify.com/tutorial/bsgenome/" />
+  <meta property="og:title" content="Forging a BSgenome package | Tom Guest" />
+  <meta property="og:description" content="Introduction In this tutorial we will use the BSgenome package to create an R package that contains the genome for Vibrio cholerae, but you can replace it with your favourite organism." /><meta property="og:image" content="https://tomguest.netlify.com/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png" />
+    <meta property="twitter:image" content="https://tomguest.netlify.com/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png" /><meta property="og:locale" content="en-us" />
+  
+    
+      <meta
+        property="article:published_time"
+        content="2018-09-09T00:00:00&#43;00:00"
+      />
+    
+    <meta property="article:modified_time" content="2018-09-09T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+  
+
+  
+
+
+
+
+
+  <title>Forging a BSgenome package | Tom Guest</title>
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper   " data-wc-page-id="bd692af138216f5df18b57a61dea5717" >
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.8988fb2a4bba758785868cfcb5244555.js"></script>
+
+  
+
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="Search...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Tom Guest</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Tom Guest</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+          
+          <li class="nav-item d-none d-lg-inline-flex">
+            <a class="nav-link" href="https://twitter.com/tom_guest" data-toggle="tooltip" data-placement="bottom" title="Follow me on Twitter" target="_blank" rel="noopener" aria-label="Follow me on Twitter">
+              <i class="fab fa-twitter" aria-hidden="true"></i>
+            </a>
+          </li>
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Forging a BSgenome package</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Sep 9, 2018
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <h2 id="introduction">Introduction</h2>
+<p>In this tutorial we will use the BSgenome package to create an R package that contains the genome for <em>Vibrio cholerae</em>, but you can replace it with <strong>your favourite organism</strong>.</p>
+<p>The <a href="https://bioconductor.org/packages/release/bioc/html/BSgenome.html" target="_blank" rel="noopener">BSgenome</a> package provides a framework for interacting with genome information in R.</p>
+<p>Alert:
+There may already be a BSgenome package for your favourite organism. Check the <a href="https://kasperdanielhansen.github.io/genbioconductor/html/BSgenome.html" target="_blank" rel="noopener">list</a> of available genomes first.</p>
+<p>Once you have <em>forged</em> (created) and installed the package, you will be able to load the genome as you would any other R package, like this:</p>
+<pre><code class="language-r">library(BSgenome.Vcholerae.NCBI.N16961)
+</code></pre>
+<p>If <em>V. cholerae</em> happens to be <strong>your favourite organism</strong> too, and want to save yourself some time, you can <a href="/tutorial/files/BSgenome.Vcholerae.NCBI.N16961_1.0.0.tar.gz">download</a> the package I created, and skip to the &lsquo;Install your genome package&rsquo; section to get started.</p>
+<h2 id="install-the-bsgenome-package">Install the BSgenome package</h2>
+<pre><code class="language-r">if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+BiocManager::install(&quot;BSgenome&quot;, version = &quot;3.8&quot;)
+</code></pre>
+<h2 id="download-the-genome-sequence">Download the genome sequence</h2>
+<p>You will need to download the fasta files for the genome you want to forge. Since <em>V. cholerae</em> has two chromosomes, these are downloaded separately. You can use whatever source you like (EMBO, NCBI etc..) but make sure you get it in <strong>fasta</strong> file type.</p>
+<p>For the <em>V.cholerae</em> reference genome (N16961):</p>
+<ul>
+<li><a href="https://www.ncbi.nlm.nih.gov/nuccore/NC_002505.1" target="_blank" rel="noopener">chromosome I</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/nuccore/NC_002506.1" target="_blank" rel="noopener">chromesome II</a></li>
+</ul>
+<p>At the NCBI website, click send to file, then select FASTA.</p>
+<h2 id="prepare-your-files">Prepare your files</h2>
+<p>I created a new folder on my Desktop and set this as my working directory:</p>
+<pre><code class="language-r">setwd(&quot;~/Desktop/genomepackage&quot;)
+</code></pre>
+<p>Within this create another named <code>seqs_srcdir</code>, move the fasta files here.</p>
+<p>Make sure the files are appropriately named (i.e.. as-is from source) for <em>V. cholerae</em> the two chromosome fasta files are named: <code>NC_002505.1.fa</code> and  <code>NC_002506.1.fa</code>. It is tempting to name them something more readable like &ldquo;chromosome 1&rdquo; but this can cause problems later.</p>
+<p>Ensure the file extensions are <code>.fa</code> if they are not already, on Mac double check by right-clicking and choosing &lsquo;Get Info&rsquo; because it could still be <code>.fasta</code> - if so, amend it.</p>
+<h3 id="seed-file">Seed file</h3>
+<p>The seed file contains all the relevant metadata for the BSgenome package, so it is worth supplying as much information as you can. The easiest way to make a seed file is to edit one that already exists, so you can download my <a href="/tutorial/files/BSgenome.Vcholerae.NCBI.N16961-seed">seed file</a> and use it as a template.</p>
+<p>You will need to use a text editor such as TextEdit on Mac (right-click and select open with &gt; TextEdit) or RStudio. Use NCBI to populate the relevant information:</p>
+<blockquote>
+<p>Package: BSgenome.Vcholerae.NCBI.N16961<br>
+Title: Full genome sequence for Vibrio cholerae O1 biovar El Tor str N16961<br>
+Description: Full genome sequence for the two chromosomes of Vibrio cholerae El Tor N16961 provided by NCBI<br>
+Version: 1.0.0<br>
+organism: Vibrio cholerae<br>
+common_name: V. cholerae<br>
+provider: NCBI<br>
+provider_version: ASM674v1<br>
+release_date: 2014/02<br>
+release_name: N16961<br>
+source_url: <a href="https://www.ncbi.nlm.nih.gov/genome/?term=Vibrio%20cholerae" target="_blank" rel="noopener">https://www.ncbi.nlm.nih.gov/genome/?term=Vibrio%20cholerae</a><br>
+organism_biocview: Vibrio_cholerae<br>
+BSgenomeObjname: Vcholerae<br>
+seqnames: c(&ldquo;NC_002505.1&rdquo;,&ldquo;NC_002506.1&rdquo;)<br>
+seqs_srcdir: /User/Desktop/genomepackage/seqs_srcdir</p>
+</blockquote>
+<p>For genomes with multiple chromosomes, list them as a vector (see above example). Otherwise <code>seqnames: chromosomenameFileName</code> is sufficient (you can remove the c()).</p>
+<p>The <code>BSgenomeObjname</code> is important because this is the name you will use to access the package in R once it has been installed.</p>
+<p>Save it as is, and then edit the file name. Be careful with the file extensions, double check using &lsquo;Get Info&rsquo; to ensure it has not been changed to <code>.txt</code> or anything else.</p>
+<h2 id="forge-the-package">Forge the package</h2>
+<p>The package is forged using the <code>forgeBSgenomeDataPkg</code> function.</p>
+<p>Simply use the name of the seed file as the only argument and it will create your package files to the same directory.</p>
+<p>Alert:<br>
+Double check the sequence files are <code>.fa</code> file types and that the details in the seed are correct before running.</p>
+<pre><code class="language-r">forgeBSgenomeDataPkg(&quot;BSgenome.Vcholerae.NCBI.N16961-seed&quot;)
+</code></pre>
+<p>If you need to run the function again, delete the previous package files first.</p>
+<h2 id="install-your-genome-package">Install your genome package</h2>
+<p>To install the genome package you will need to use the Mac command line (Terminal).</p>
+<ul>
+<li>Close R</li>
+<li>Open Terminal</li>
+<li>In Terminal navigate to your working directory:
+<ul>
+<li>use <code>ls</code> to see list of files in the current directory</li>
+<li>use <code>cd</code> to move to a directory (i.e.. <code>cd Desktop</code>)</li>
+</ul>
+</li>
+<li>Run <code>R CMD build BSgenome.Vcholerae.EBI.N16961</code> to compile the package</li>
+<li>Run <code>R CMD check BSgenome.Vcholerae.EBI.N16961.tar.gz</code> to check it</li>
+<li>Run <code>R CMD INSTALL BSgenome.Vcholerae.NCBI.N16961_1.0.0.tar.gz</code></li>
+</ul>
+<p>Alert:<br>
+If you have downloaded my <em>V. cholerae N16961</em> <a href="/tutorial/files/BSgenome.Vcholerae.NCBI.N16961_1.0.0.tar.gz">package</a> you will need to navigate to wherever you have saved the file.  Then run:<br>
+<code>R CMD INSTALL BSgenome.Vcholerae.NCBI.N16961_1.0.0.tar.gz</code></p>
+<p>And you&rsquo;re done! It should now be ready to use.</p>
+<h2 id="loading-and-accessing-the-genome-in-r">Loading and accessing the genome in R</h2>
+<p>To use the genome in R you will need to load the package using the <code>library()</code> function.</p>
+<pre><code class="language-r">library(BSgenome.Vcholerae.NCBI.N16961)
+</code></pre>
+<p>Enter the <code>BSgenomeObjname</code> (in this case Vcholerae) to print some general information about the genome to the console.</p>
+<pre><code class="language-r">Vcholerae
+</code></pre>
+<pre><code>## V. cholerae genome:
+## # organism: Vibrio cholerae (V. cholerae)
+## # genome: ASM674v1
+## # provider: NCBI
+## # release date: 2014/02
+## # 2 sequences:
+## #   NC_002505.1 NC_002506.1                                                
+## # (use 'seqnames()' to see all the sequence names, use the '$' or '[[' operator
+## # to access a given sequence)
+</code></pre>
+<p><code>length()</code> tells you how many chromosomes there are</p>
+<pre><code class="language-r">length(Vcholerae)
+</code></pre>
+<pre><code>## [1] 2
+</code></pre>
+<p><code>Vcholerae$NC_002505.1</code> tells you the length of chromosome I and a bit of its sequence</p>
+<pre><code class="language-r">Vcholerae$NC_002505.1
+</code></pre>
+<pre><code>## 2961149-letter DNAString object
+## seq: AGGGTCATTAAATATATATAAAGATCTATATAGAGA...GGCTAGAAAATCGCTTTCCTGTTTTTTCGATCAAGG
+</code></pre>
+<p><code>alphabetFrequency(Vcholerae$NC_002505.1)</code> shows you the ACGT content of chromosome I</p>
+<pre><code class="language-r">alphabetFrequency(Vcholerae$NC_002505.1)
+</code></pre>
+<pre><code>##      A      C      G      T      M      R      W      S      Y      K      V 
+## 769234 703384 708931 779567      0      0      0      0      0      0      0 
+##      H      D      B      N      -      +      . 
+##      0      0      0     33      0      0      0
+</code></pre>
+<p>You can extract sequence from specific co-ordinates, for example to select the sequence from position 45 to 65 on chromosome I:</p>
+<pre><code class="language-r">Vcholerae$NC_002505.1[45:65]
+</code></pre>
+<pre><code>## 21-letter DNAString object
+## seq: TTAGATCTACTATTAAGGAGC
+</code></pre>
+<p>You could then store this in a data frame, export the data frame as fasta file (with multiple sequence etc..) and use it somewhere else&hellip;</p>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://tomguest.netlify.com/tutorial/bsgenome/&amp;text=Forging%20a%20BSgenome%20package" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://tomguest.netlify.com/tutorial/bsgenome/&amp;t=Forging%20a%20BSgenome%20package" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Forging%20a%20BSgenome%20package&amp;body=https://tomguest.netlify.com/tutorial/bsgenome/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://tomguest.netlify.com/tutorial/bsgenome/&amp;title=Forging%20a%20BSgenome%20package" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=Forging%20a%20BSgenome%20package%20https://tomguest.netlify.com/tutorial/bsgenome/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://tomguest.netlify.com/tutorial/bsgenome/&amp;title=Forging%20a%20BSgenome%20package" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="https://tomguest.netlify.com/"><img class="avatar mr-3 avatar-circle" src="/author/tom-guest/avatar_hu254aa4ed9f731e64a3f88fdaf5d81d20_135675_270x270_fill_q75_lanczos_center.jpg" alt="Tom Guest"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="https://tomguest.netlify.com/">Tom Guest</a></h5>
+      <h6 class="card-subtitle">Postdoctoral researcher</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/tom_guest" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=Q_M8f28AAAAJ&amp;hl" target="_blank" rel="noopener">
+        <i class="fas fa-graduation-cap"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    <script src="/js/vendor-bundle.min.b73dfaac3b6499dc997741748a7c3fe2.js"></script>
+
+    
+    
+    
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      
+      
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/python.min.js" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/latex.min.js" crossorigin="anonymous"></script>
+        
+      
+
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js" integrity="sha512-SeiQaaDh73yrb56sTW/RgVdi/mMqNeM2oBwubFHagc5BkixSpP1fvqF47mKzPGWYSSy4RwbBunrJBQ4Co8fRWA==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    
+      
+      <script id="search-hit-fuse-template" type="text/x-template">
+        <div class="search-hit" id="summary-{{key}}">
+          <div class="search-hit-content">
+            <div class="search-hit-name">
+              <a href="{{relpermalink}}">{{title}}</a>
+              <div class="article-metadata search-hit-type">{{type}}</div>
+              <p class="search-hit-description">{{snippet}}</p>
+            </div>
+          </div>
+        </div>
+      </script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/en/js/wowchemy.min.d68ecd57c0ec1f1f61d65fd568f1c3a0.js"></script>
+
+    
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+
+
+</body>
+</html>

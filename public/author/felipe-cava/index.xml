@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Felipe Cava | Tom Guest</title>
+    <link>https://tomguest.netlify.com/author/felipe-cava/</link>
+      <atom:link href="https://tomguest.netlify.com/author/felipe-cava/index.xml" rel="self" type="application/rss+xml" />
+    <description>Felipe Cava</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 24 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://tomguest.netlify.com/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png</url>
+      <title>Felipe Cava</title>
+      <link>https://tomguest.netlify.com/author/felipe-cava/</link>
+    </image>
+    
+    <item>
+      <title>LD-transpeptidation is crucial for fitness and polar growth in Agrobacterium tumefaciens</title>
+      <link>https://tomguest.netlify.com/publication/ldt-article/</link>
+      <pubDate>Thu, 24 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://tomguest.netlify.com/publication/ldt-article/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,1079 @@
+<!DOCTYPE html><html lang="en-us" >
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  
+  
+    <meta name="generator" content="Wowchemy 5.3.0 for Hugo" />
+  
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Tom Guest" />
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction In this tutorial we will use the QuasR package to align our sequencing data to a reference genome.
+QuasR uses the alignment program Bowtie, and will produce bam files for each alignment." />
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://tomguest.netlify.com/tutorial/alignment/" />
+
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+
+  
+  
+  
+    <meta name="theme-color" content="#1565c0" />
+  
+
+  
+  
+
+  
+
+  <link rel="stylesheet" href="/css/vendor-bundle.min.f1ecf783c14edc00c9320c205831ad8e.css" media="print" onload="this.media='all'">
+
+  
+  
+  
+    
+    
+
+    
+    
+    
+    
+      
+      
+    
+    
+    
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" integrity="sha512-1xoFisiGdy9nvho8EgXuXvnpR5GAMSjFwp40gSRE3NwdUdIMIKuPa7bqoUhLD0O/5tPNhteAsE5XyyMi5reQVA==" crossorigin="anonymous" media="print" onload="this.media='all'">
+    
+
+    
+
+    
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+      
+      
+
+      
+      
+
+      
+    
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.481af39c39ffd87b2d14f39943e7c723.css" />
+
+  
+
+
+
+  
+
+  
+
+  
+
+
+
+
+  
+  
+  
+
+  
+
+  
+    <link rel="manifest" href="/manifest.webmanifest" />
+  
+
+  <link rel="icon" type="image/png" href="/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_3.png" />
+  <link rel="apple-touch-icon" type="image/png" href="/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_180x180_fill_lanczos_center_3.png" />
+
+  <link rel="canonical" href="https://tomguest.netlify.com/tutorial/alignment/" />
+
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary" />
+  
+  <meta property="og:site_name" content="Tom Guest" />
+  <meta property="og:url" content="https://tomguest.netlify.com/tutorial/alignment/" />
+  <meta property="og:title" content="Aligning to a reference genome | Tom Guest" />
+  <meta property="og:description" content="Introduction In this tutorial we will use the QuasR package to align our sequencing data to a reference genome.
+QuasR uses the alignment program Bowtie, and will produce bam files for each alignment." /><meta property="og:image" content="https://tomguest.netlify.com/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png" />
+    <meta property="twitter:image" content="https://tomguest.netlify.com/media/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_3.png" /><meta property="og:locale" content="en-us" />
+  
+    
+      <meta
+        property="article:published_time"
+        content="2019-04-19T00:00:00&#43;00:00"
+      />
+    
+    <meta property="article:modified_time" content="2019-04-19T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+  
+
+  
+
+
+
+
+
+  <title>Aligning to a reference genome | Tom Guest</title>
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper   " data-wc-page-id="2539485f2d741d80539075b7cc345db0" >
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.8988fb2a4bba758785868cfcb5244555.js"></script>
+
+  
+
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="Search...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Tom Guest</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Tom Guest</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+          
+          <li class="nav-item d-none d-lg-inline-flex">
+            <a class="nav-link" href="https://twitter.com/tom_guest" data-toggle="tooltip" data-placement="bottom" title="Follow me on Twitter" target="_blank" rel="noopener" aria-label="Follow me on Twitter">
+              <i class="fab fa-twitter" aria-hidden="true"></i>
+            </a>
+          </li>
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Aligning to a reference genome</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Apr 19, 2019
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <h2 id="introduction">Introduction</h2>
+<p>In this tutorial we will use the <a href="https://bioconductor.org/packages/release/bioc/html/QuasR.html" target="_blank" rel="noopener">QuasR</a> package to align our sequencing data to a reference genome.</p>
+<p>QuasR uses the alignment program <code>Bowtie</code>, and will produce <code>bam</code> files for each alignment. There are more advanced options for including auxiliary genomes (which are used to align &lsquo;leftover&rsquo; unmapped sequences) which are useful to check for contaminating DNA and for spiked experiments.</p>
+<h3 id="sequencing-reads">Sequencing reads</h3>
+<p>In ChIP-seq the sequencing reads are typically short single end dsDNA. This means that the 5’ end will be sequenced on “+” strand and the 3’ end will be on “-” strand. &ldquo;+” reads extend only in positive direction and “-” reads in negative direction which results in the typical bimodal peak at transcription factor binding sites.</p>
+<p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<figure  >
+  <div class="d-flex justify-content-center">
+    <div class="w-100" ><img src="/tutorial/alignment_files/reads.png" alt="" loading="lazy" data-zoomable /></div>
+  </div></figure>
+</p>
+<h2 id="install-the-quasr-package">Install the QuasR package</h2>
+<pre><code class="language-r">if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+BiocManager::install(&quot;QuasR&quot;, version = &quot;3.8&quot;)
+</code></pre>
+<h2 id="folder-structure">Folder structure</h2>
+<p>I recommend having a folder for each new project. Within this create separate folders for <code>raw_fastq</code>, <code>alignments</code>, <code>genomes</code>, etc. You can then keep things tidy and avoid making any changes or accidentally deleting your raw fastq sequencing data.</p>
+<p>You should set the project root as working directory, (or even better create a RStudio project).</p>
+<pre><code class="language-r">setwd(&quot;path/to/myChIPseqProject&quot;)
+</code></pre>
+<h2 id="preparation">Preparation</h2>
+<p>Download and save the genome <code>fasta</code> file(s) to your genomes folder. Then direct R to their location(s).</p>
+<pre><code class="language-r">chromosomeI &lt;- &quot;genomes/chromosome_I.fasta&quot;
+chromosomeII &lt;- &quot;genomes/chromosome_II.fasta&quot;
+</code></pre>
+<p>You will also need to create a tabulated <code>sampleFile.txt</code> which should contain two columns <code>FileName</code> and <code>SampleName</code>, list the names of the files (exactly as they are) and a name for each sample.</p>
+<p>If you multiple replicates you can either name them as <code>replicate_**</code> or if you give them all the same SampleName, R will know to treat them as replicates, but you will need to decide if that is how you want R to behave. If you are unsure stick with the former approach.</p>
+<table>
+<thead>
+<tr>
+<th>FileName</th>
+<th>SampleName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sample1.fastq</td>
+<td>sample1</td>
+</tr>
+<tr>
+<td>sample2.fastq</td>
+<td>sample2</td>
+</tr>
+</tbody>
+</table>
+<p>Then assign this to <code>sampleFile</code> in R:</p>
+<pre><code class="language-r">sampleFile &lt;- &quot;raw_fastq/sampleFile.txt&quot;
+</code></pre>
+<h2 id="making-the-alignments">Making the alignment(s)</h2>
+<p>If you have multiple chromosomes you can assign the alignment to each as a separate QuasR project.</p>
+<p>Note:
+You could choose to align using a BSgenome object instead, see the <a href="https://bioconductor.org/packages/release/bioc/vignettes/QuasR/inst/doc/QuasR.html#617_using_a_bsgenome_package_as_reference_genome" target="_blank" rel="noopener">QuasR documentation</a> if you prefer to do that.</p>
+<p>Before you run the <code>qAlign()</code> function, make sure that you have created the folders to store your alignments (or you will get an error saying the directory does not exist).</p>
+<p>To see a full list of other alignment parameters, use <code>?qAlign</code> to see the helpfile.</p>
+<pre><code class="language-r">proj_chrI &lt;- qAlign(sampleFile, genome=chromosomeI, projectName = &quot;chrI&quot;, alignmentsDir= &quot;alignments/chrI/&quot;)
+proj_chrII &lt;- qAlign(sampleFile, genome=chromosomeII, projectName = &quot;chrII&quot;, alignmentsDir= &quot;alignments/chrII/&quot;)
+</code></pre>
+<p>If you run the same code again and you already have the output <code>.bam</code> and <code>.txt</code> files it will not repeat the alignment. If you alter any alignment parameters it will do a new alignment.</p>
+<p>You can type the project name into the console to see which output files correspond to each alignment.</p>
+<pre><code class="language-r">proj_chrI
+proj_chrII
+</code></pre>
+<h3 id="auxiliary-alignments">Auxiliary alignments</h3>
+<p>You can specify auxiliary genomes to be used to align unmapped sequences from the core genome. For example, if you have a spiked experiment or to check for contaminating sequences.</p>
+<p>To do this supply a text file with a list of additional genome files like this:</p>
+<table>
+<thead>
+<tr>
+<th>FileName</th>
+<th>AuxName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NC_001422.1.fa</td>
+<td>phiX174</td>
+</tr>
+</tbody>
+</table>
+<p>Then assign it in R:</p>
+<pre><code class="language-r">additionalGenomes &lt;- &quot;genomes/additionalGenomes.txt&quot;
+</code></pre>
+<p>And then when running qAlign, add <code>auxiliaryFile = additionalGenomes</code> to the arguments list.</p>
+<pre><code class="language-r">proj_chrI &lt;- qAlign(sampleFile, genome=chromosomeI, projectName = &quot;chrI&quot;, alignmentsDir= &quot;alignments/chrI/&quot;,
+                    auxiliaryFile = additionalGenomes)
+</code></pre>
+<h2 id="alignment-stats-and-quality-reports">Alignment stats and quality reports</h2>
+<p>You can use the <code>alignmentStats()</code> function to find out the number of mapped/unmapped reads.</p>
+<pre><code class="language-r">alignmentStats(proj_chrI)
+alignmentStats(proj_chrII)
+</code></pre>
+<p>You can produce PDF quality reports for each alignment using the <code>qQCReport()</code> function.</p>
+<pre><code class="language-r">qQCReport(proj_chrI, pdfFilename = &quot;quality_reports/chrI_quality.pdf&quot;)
+qQCReport(proj_chrII, pdfFilename = &quot;quality_reports/chrII_quality.pdf&quot;)
+</code></pre>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://tomguest.netlify.com/tutorial/alignment/&amp;text=Aligning%20to%20a%20reference%20genome" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://tomguest.netlify.com/tutorial/alignment/&amp;t=Aligning%20to%20a%20reference%20genome" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Aligning%20to%20a%20reference%20genome&amp;body=https://tomguest.netlify.com/tutorial/alignment/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://tomguest.netlify.com/tutorial/alignment/&amp;title=Aligning%20to%20a%20reference%20genome" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=Aligning%20to%20a%20reference%20genome%20https://tomguest.netlify.com/tutorial/alignment/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://tomguest.netlify.com/tutorial/alignment/&amp;title=Aligning%20to%20a%20reference%20genome" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="https://tomguest.netlify.com/"><img class="avatar mr-3 avatar-circle" src="/author/tom-guest/avatar_hu254aa4ed9f731e64a3f88fdaf5d81d20_135675_270x270_fill_q75_lanczos_center.jpg" alt="Tom Guest"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="https://tomguest.netlify.com/">Tom Guest</a></h5>
+      <h6 class="card-subtitle">Postdoctoral researcher</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/tom_guest" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=Q_M8f28AAAAJ&amp;hl" target="_blank" rel="noopener">
+        <i class="fas fa-graduation-cap"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    <script src="/js/vendor-bundle.min.b73dfaac3b6499dc997741748a7c3fe2.js"></script>
+
+    
+    
+    
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      
+      
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/python.min.js" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/latex.min.js" crossorigin="anonymous"></script>
+        
+      
+
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js" integrity="sha512-SeiQaaDh73yrb56sTW/RgVdi/mMqNeM2oBwubFHagc5BkixSpP1fvqF47mKzPGWYSSy4RwbBunrJBQ4Co8fRWA==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.2/anchor.min.js" integrity="sha512-I7w3ZdSFzw5j3jU3ZkNikBNeIrl3i+hEuEdwNmqUJvwNcaBUNcijnP2gd9DtGlgVYDplfjGoD8vTNsID+lCjqg==" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    
+      
+      <script id="search-hit-fuse-template" type="text/x-template">
+        <div class="search-hit" id="summary-{{key}}">
+          <div class="search-hit-content">
+            <div class="search-hit-name">
+              <a href="{{relpermalink}}">{{title}}</a>
+              <div class="article-metadata search-hit-type">{{type}}</div>
+              <p class="search-hit-description">{{snippet}}</p>
+            </div>
+          </div>
+        </div>
+      </script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/en/js/wowchemy.min.d68ecd57c0ec1f1f61d65fd568f1c3a0.js"></script>
+
+    
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+
+
+</body>
+</html>

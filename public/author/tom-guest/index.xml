@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tom Guest</title>
+    <link>https://tomguest.netlify.com/author/tom-guest/</link>
+      <atom:link href="https://tomguest.netlify.com/author/tom-guest/index.xml" rel="self" type="application/rss+xml" />
+    <description>Tom Guest</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language>
+    <image>
+      <url>https://tomguest.netlify.com/author/tom-guest/avatar_hu254aa4ed9f731e64a3f88fdaf5d81d20_135675_270x270_fill_q75_lanczos_center.jpg</url>
+      <title>Tom Guest</title>
+      <link>https://tomguest.netlify.com/author/tom-guest/</link>
+    </image>
+    
+  </channel>
+</rss>
